@@ -7,6 +7,12 @@ generator js {
   provider = "prisma-client-js"
 }
 
+plugin markdown {
+    provider = './dist/markdown-plugin'
+    title = 'My Awesome Todo App'
+    description = 'A multi-tenant Todo application built with ZenStack.'
+}
+
 // where users can collaborate on todo lists and items
 model Space {
   id Int @id @default(autoincrement())
@@ -86,7 +92,8 @@ model List {
   space Space @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   spaceId Int
   owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ownerId Int @deny('update', true)  title String
+  ownerId Int @deny('update', true)
+  title String
   private Boolean @default(false)
   todos Todo[]
 
