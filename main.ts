@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { enhance } from '@zenstackhq/runtime'
 import { ZenStackMiddleware } from '@zenstackhq/server/express'
 import express, { Request } from 'express'
+import RESTHandler from '@zenstackhq/server/api/rest'
 
 const app = express()
 app.use(express.json())
@@ -19,6 +20,14 @@ function getUser(req: Request) {
 app.use(
   '/api/rpc',
   ZenStackMiddleware({
+    getPrisma: (req) => enhance(prisma, { user: getUser(req) }),
+  })
+)
+
+app.use(
+  '/api/rest',
+  ZenStackMiddleware({
+    handler: RESTHandler({ endpoint: 'http://localhost:3000/api/rest' }),
     getPrisma: (req) => enhance(prisma, { user: getUser(req) }),
   })
 )
